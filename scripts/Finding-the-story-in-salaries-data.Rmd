@@ -1,0 +1,6 @@
+---
+title: "Finding the story in salaries data"
+output: 
+html_notebook: default
+---
+

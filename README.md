@@ -6,7 +6,7 @@
 - You need the latest version of [R and RStudio installed](https://docs.google.com/document/d/1W7WIIW9UyqOec7rU36EsQqrRvgLJGRf3_dwTcy4YvJM/edit?usp=sharing) to your computer (if you're at the conference, this has already been done for you!)
 
 ### Brief Introduction
-For this class, we’ll be learning the basics of the R programming language, and using RStudio to interact with R simply and efficiently. 
+For this class, we’ll be learning the basics of the R programming language, and interacting with R through RStudio which is an efficient and user-friendly tool. 
 
 A bit of background: R is a language that was created for statistical analysis and graphics; it does these two things very well. Over time, additional functionality has been added to R (because it is an open standard language, so anyone can contribute packages or libraries) so that it now works very well for data analysis, web scraping, app building, and even natural language processing. 
 

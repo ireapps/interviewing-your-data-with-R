@@ -50,9 +50,8 @@ OK let's unpack a few things about that code:
 3. R is almost always case sensitive: when typing column names (state), matching exact values ("Colorado"), and even in function names.
 
 *Your turn!* Filter for your state (or a different state):
-```{r}
 
-```
+
 
 Now add another filter: look for records from your state in 2020. When adding criteria to a filter, you need to specify an operator: AND (&) or OR (|). Do you want both criteria to be true (&) or do you want one or the other to be true (|). In this case, we want both to be true: 
 ```{r}
@@ -69,14 +68,12 @@ deaths %>% filter(state=="Missouri" & year==2020) %>% arrange(desc(deaths))
 ```
 
 *Your turn!* Try looking at records in your state for a different year. Did the age group with the most deaths change?:
-```{r}
 
-```
+
 
 *Your turn!* Which state had the most deaths for the age group "25-34 years" in 2020?
-```{r}
 
-```
+
 
 You've likely spotted a problem with our analysis so far. Looking at overall deaths isn't a fair way to compare states or compare age groups, since they have different population sizes. You have population information for each age group in each state each year, so you can use that to calculate a rate, which will be a fairer comparison. Death rates are often expressed as "per 100,000 people", and the math formula for that is: 
 `deaths / population * 100000`
@@ -93,15 +90,11 @@ deaths <- deaths %>% mutate(death_rate = deaths/population*100000)
 ```
 
 *Your turn!* Sort your data by the new "death_rate" column to see the largest death rate on top:
-```{r}
 
-```
 
 
 *Your turn!* Filter for your state in 2020 and see which age group has the highest death rate: 
-```{r}
 
-```
 
 
 Now that we've practiced sorting and filtering, let's turn to the third pillar of data analysis: aggregating. In R we use a lot of the same summary functions as spreadsheets: `sum()`, `mean()`, `median()`. R uses "mean" instead of "average." 
@@ -118,9 +111,8 @@ deaths %>% summarise(average_deaths = mean(deaths))
 ```
 
 *Your turn!* Narrow it down a bit. Calculate the average deaths for 25-34 year-olds, across all states and years (Hint: use filter() to isolate that one age group before piping into the summarise() function.)
-```{r}
 
-```
+
 
 Another common summary statistics we use in data analysis is the count of rows. The function for counting rows in R is `n()`, and doesn't require any arguments. We could use it here to count how many rows there are in total (which we already know):
 ```{r}
@@ -153,9 +145,7 @@ deaths %>% group_by(state) %>% summarise(total_deaths = sum(deaths)) %>% arrange
 
 
 *Your turn!* Find the age group with the most deaths:
-```{r}
 
-```
 
 
 Here again is the problem where comparing raw deaths isn't that meaningful. To fairly compare states by comparing death rates, we need to add up all the deaths by state, the population by state, and then calculate a new death rate. You CANNOT use the existing death_rate column to find the death_rate by state. 
@@ -176,7 +166,6 @@ state_deaths <- state_deaths %>% mutate(death_rate = total_deaths/total_pop*1000
 
 
 *Your turn!* Which state had the highest death rate in 2020? 
-```{r}
 
-```
+
 

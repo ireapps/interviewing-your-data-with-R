@@ -4,3 +4,25 @@ output:
 html_notebook: default
 ---
 
+Welcome to your first notebook file! Whenever you create a notebook, you'll see some notation appear at the top, including a "title" in double quotes. This one says "Introduction". You can change these settings or not. All notebook files can output to an html file (like the Introduction-to-R.html file you just opened; that was created using a notebook) and so have these notations.
+
+Now that you've gone over the `Introduction-to-R` file, we'll start with some of the basics of the R language.
+
+Below you'll practice writing some basic R. When you write a line of code, you can run it by putting your cursor on that line and typing `cmd+return`, which will run one string of code (note: sometimes your code will cover more than one line. This will run a *complete* set of code that has a natural stopping point. This will likely make more sense later). 
+You can also run code in a code chunk by using the green "play" button in the upper-right corner. This will run *all* the code in a chunk.
+
+Create a *character vector* that lists your five favorite foods (or movies, TV shows, books, albums, whatever) and then print that vector. 
+Remember that you have to give it a name.
+```{r}
+
+```
+
+
+Create a *numeric vector* with every whole number between 10 and 20. 
+```{r}
+
+```
+
+Create your first code chunk using `cmd+option+i`. In it, create two variables that are each numbers, then add them together using sum().
+
+

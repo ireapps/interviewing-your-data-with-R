@@ -23,6 +23,11 @@ Create a *numeric vector* with every whole number between 10 and 20.
 
 ```
 
-Create your first code chunk using `cmd+option+i`. In it, create two variables that are each numbers, then add them together using sum().
+
+Sum up all the numbers in the vector you just created. 
+```{r}
+
+```
 
 
+Create your first code chunk using `cmd+option+i`. In it, create two variables that are each numbers, then add them together.

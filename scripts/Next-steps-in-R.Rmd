@@ -4,4 +4,204 @@ output:
 html_notebook: default
 ---
 
+Here are a few important things you can do in R, and these are just the tip of the iceberg. There's much more to learn!
+
+# Import data from the web
+
+If you come across a CSV on the web, i.e. a URL that ends in ".csv", you can import that directly into R rather than downloading it to your computer first. This is helpful if you want to grab updated data everytime you run your analysis (assuming the CSV is updated). 
+
+Here's an example: https://www.irs.gov/charities-non-profits/exempt-organizations-business-master-file-extract-eo-bmf
+This is the Business Master File (BMF) from the IRS, which documents all organizations that have tax exempt status. There are several CSVs linked on this page that you can download, but we'll import one directly here. to get the link, right-click on the linked file and select "copy link address" (wording varies by browser).
+
+To import a file from the web, use the read_csv() function exactly as you would with a local file. read_csv() is a tidyverse function, so start by importing tidyverse:
+
+```{r}
+library(tidyverse)
+
+bmf_region3 <- read_csv("https://www.irs.gov/pub/irs-soi/eo3.csv")
+```
+
+Take a look at the resulting data: 
+```{r}
+str(bmf_region3)
+```
+
+Let's say, in looking over the imported data, you decide that RStudio assigned the wrong data type to a column. There's an argument to read_csv() called col_types(), which allows you to specify column types for certain columns. For example, if you decide that the RULING column should be a number column, adjust the import like so:
+```{r}
+bmf_region3 <- read_csv("https://www.irs.gov/pub/irs-soi/eo3.csv", col_types=c(RULING="i"))
+```
+
+Let's unpack this a little. col_types() can do a lot of things; to learn more about all of them, you'll have to get into the documentation. In this case, we choose one column and set it equal to "i", or integer. "c" stands for character, "d" for double, etc. This input also requires that you use the c() function. If you had multiple inputs the c() function concatenates, or pastes them together. Even though we only have one input here, you still need it. 
+
+Take a look at the resulting data: 
+```{r}
+str(bmf_region3)
+```
+
+# Import data from a Socrata web portal PLUS working with dates
+
+Sometimes you'll come across data in Socrata web portals. A lot of cities have open data portals with Socrata, that look something like this: 
+https://data.cityofnewyork.us/Health/DOHMH-Dog-Bite-Data/rsgh-akpg
+
+R has a package called RSocrata that makes it easier to quickly access all the data from one of these web pages. To use it you need to import the RSocrata package and use the read.socrata() function. 
+This does a couple things for you: Socrata notoriously limits web pings like this to 1000 records, whereas this dataset is over 22000. RSocrata will override those limits for you and get you the whole dataset. 
+Additionally, you don't have to mess with API arguments. 
+
+```{r}
+library(RSocrata)
+
+dog_bites <- read.socrata("https://data.cityofnewyork.us/Health/DOHMH-Dog-Bite-Data/rsgh-akpg")
+
+```
+
+Take a look at this data: 
+```{r}
+str(dog_bites)
+```
+
+Note that the column "dateofbite" is labeled POSIXct... which is a fancy way of storing a date. 
+There's a package called "lubridate" that makes working with dates easier; it has some handy functions that you may be familiar with from spreadsheets, such as year(), month() and day(). 
+
+```{r}
+library(lubridate)
+```
+
+
+First find out the timeframe for this dataset: 
+```{r}
+dog_bites %>% summarise(min=min(dateofbite), max=max(dateofbite))
+```
+
+
+Next, find out how many dog bites are reported each *year*, using the year() function: 
+```{r}
+dog_bites %>% count(year(dateofbite))
+```
+
+
+Do dog bites tend to happen on particular days of the week? The wday() function gives you the weekday for any date (the "label" argument means we want to see the weekday as a name rather than a number): 
+```{r}
+dog_bites %>% count(wday(dateofbite, label=TRUE))
+```
+
+Unsurprisingly, most dog bites happen on the weekends.
+
+
+For fun, calculate the time between each date and today, using the now() function: 
+```{r}
+dog_bites %>% 
+  mutate(time_diff = now() - dateofbite) %>% 
+  select(dateofbite, time_diff)
+```
+
+
+You can explore all of lubridate's functions in the tipsheet in the "docs" folder.
+
+# Join two datasets together
+
+For this exercise we will use some data from FEC Campaign Finance website, which is in a folder called "campfin" in the "data" folder. There are two files we'll load: mo_contributions.csv and committees.csv.
+
+```{r}
+mo_contribs <- read_csv("data/campfin/mo_contributions.csv")
+committees <- read_csv("data/campfin/committees.csv")
+```
+
+This is a small subset of FEC data that looks at individual contributions to candidates for the Missouri Senate seats. Because this is only individual contributions, it avoids some of the gnarlier issues with this data. If you ever work with the full dataset, be sure you read the documentation and have some good experts at hand. 
+
+The `cmte_id` field is the id for the committee that is filing the reports, i.e. reporting donations they've received. That's the only information we really have about the committee in the `mo_contribs` table; the rest of the information about a committee is kept in the committees table. 
+
+Start by finding out how much each committee received:
+```{r}
+mo_contribs %>% 
+  group_by(cmte_id) %>% 
+  summarise(total_amt = sum(transaction_amt)) %>% 
+  arrange(desc(total_amt))
+```
+
+To figure out which candidate is connected with each committee, we need to join the `mo_contribs` and `committees` tables together. To do this, tidyverse has an inner_join function. If you're familiar with SQL, this works in much the same way. An inner join returns only matching records from both tables. For example, if there's a contribution in `mo_contribs` where the cmte_id doesn't match any of the committees in the `committees` table, we won't see that record in our results. 
+Tidyverse also has other join functions, such as left_join(), semi_join() and anti_join(). Read more about these in the documentation. 
+
+The common field in both of these tables is cmte_id, so we'll join on that committee: 
+```{r}
+mo_contribs_full <- mo_contribs %>% inner_join(committees, by="cmte_id") 
+```
+
+Notice that the resulting dataset has the same number of rows as `mo_contribs`, which is good; every record matched one record from the `committees` table. The resulting dataset has 35 columns: 21 from `mo_contribs` and 14 from `committees` (R does not duplicate the joining column, in this case `cmte_id`.)
+
+Notice also that one field, city, exist in both tables. In the results table, it is now labeled city.x and city.y
+
+To find the committee that has raised the most money so far, use the joined table: 
+```{r}
+mo_contribs_full %>% 
+  group_by(cmte_nm) %>% 
+  summarise(total_amt = sum(transaction_amt)) %>% 
+  arrange(desc(total_amt))
+```
+
+Even though Josh Hawley is not running this cycle (because he's an incumbent and not up for reelection until 2024), he is bringing in the most cash from individual donations.
+
+
+# Create a new categorical field using a conditional statement
+
+Here's a dirty little secret about FEC Campaign Finance data. It's messy and has a bunch of landmines for unsuspecting journalists. One of them is that there are a lot of different transaction types in the data. Some of them are for refunds. And sometimes those refunds are logged as negative, and sometimes they're not. Sometimes donations that are not flagged as refunds are negative. This means that you can't simply sum transaction_amt, as we did above, and hope to get the correct number. 
+
+In this case, it helps to remake your own transaction amount field. So if the transaction type indicates that the record is negative, you make the amount negative. This requires a conditional update; some amounts should stay as they are, others should be made negative. 
+
+To do this, you can use the case_when() function. It runs through a list of conditions and acts accordingly. Here's what it looks like to create a new field called "new_amount" (using the mutate function) and update it with the transaction_amt made negative where transaction_tp = "22Y" (which is a refund code). 
+```{r}
+mo_contribs_full <- mo_contribs_full %>% 
+  mutate(new_amount = case_when(
+    transaction_tp == "22Y" & transaction_amt > 0 ~ transaction_amt*-1,
+    TRUE ~ transaction_amt
+  ))
+```
+
+Rerun the analysis above to evaluate which committee is receiving the most money, but with your new_amount column:
+```{r}
+mo_contribs_full %>% 
+  group_by(cmte_nm) %>% 
+  summarise(total_amt = sum(new_amount)) %>% 
+  arrange(desc(total_amt))
+```
+
+Josh Hawley is still on top but the numbers have changed. 
+
+# Reshape and transpose your data
+
+Using the campaign contributions data, we'll analyze contributions to the different committees by donor state. Which candidates are getting the most out-of-state money, for example? 
+
+We'll make this a little easier by creating a flag column that simply tells us if a donor is in Missouri or out of state. To do this, use case_when() again:
+```{r}
+mo_contribs_full <- mo_contribs_full %>% 
+  mutate(donor_state = case_when(
+    state == "MO" ~ "MO",
+    state != "MO" ~ "out_of_state"
+  ))
+```
+
+
+Next step: calculate total contributions by the new field and committee and save it to a variable called "state_analysis" 
+```{r}
+state_analysis <- mo_contribs_full %>% 
+  group_by(donor_state, cmte_nm) %>% 
+  summarise(total_amt = sum(new_amount))
+```
+
+Take a look at the resulting table: the amounts are broken down by both factors. But we want to quickly compare parties per zip: it would be helpful if they were side by side. Ideally, we'd have a list of zips with a column for R and a column for D. 
+
+To do this, use a function called pivot_wider(). There is also a function called pivot_longer() which does the opposite. 
+```{r}
+state_analysis %>% 
+  pivot_wider(names_from = donor_state, values_from = total_amt)
+```
+
+To make this a little easier to read, let's add a column that calculates out of state contributions as a percent of the whole (and use the round() function to avoid a whole lot of decimals in your results: 
+```{r}
+state_analysis %>% 
+  pivot_wider(names_from = donor_state, values_from = total_amt) %>% 
+  mutate(state_pct = round(out_of_state/sum(MO,out_of_state,na.rm=T),2)) %>% 
+  arrange(desc(state_pct))
+```
+
+Josh Hawley has the largest percentage with 16% coming from out-of-state donors.
 

@@ -23,7 +23,7 @@ Learning a programming language requires some investment of time. We're going to
 ### Data and Script Files
 All the data we'll use in this class in the `data` folder. All notebook files (.Rmd) are in the `scripts` folder. We'll go through them in this order: 
 
-1. [Introduction.Rmd](scripts/Introduction.Rmd)
+1. [R-Basics.Rmd](scripts/R-Basics.Rmd)
 2. [Importing-and-intro-to-data-analysis.Rmd](scripts/Importing-and-intro-to-data-analysis.Rmd)
 3. [Finding-the-story-in-salaries-data.Rmd](scripts/Finding-the-story-in-salaries-data.Rmd)
 4. [Next-steps-in-R.Rmd](scripts/Next-steps-in-R.Rmd)

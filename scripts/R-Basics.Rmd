@@ -1,10 +1,18 @@
 ---
-title: "Introduction"
+title: "R Basics"
 output: 
 html_notebook: default
 ---
 
-Welcome to your first notebook file! Whenever you create a notebook, you'll see some notation appear at the top, including a "title" in double quotes. This one says "Introduction". You can change these settings or not. All notebook files can output to an html file (like the Introduction-to-R.html file you just opened; that was created using a notebook) and so have these notations.
+# Introduction
+
+Welcome to your first notebook file! Whenever you create a notebook, you'll see some notation appear at the top, including a "title" in double quotes. This one says "R Basics". You can change these settings or not. All notebook files can output to an html file (like the Introduction-to-R.html file you just opened; that was created using a notebook) and so have these notations.
+
+To start, there are a bunch of packages you need to install (at the conference, these have already been installed for you). If you're working through this from home, run the following code chunk (it only needs to be run once for your computer):
+```{r}
+install.packages(c("tidyverse", "lubridate", "janitor", "readxl", "RSocrata"))
+```
+
 
 Now that you've gone over the `Introduction-to-R` file, we'll start with some of the basics of the R language.
 
@@ -31,3 +39,5 @@ Sum up all the numbers in the vector you just created.
 
 
 Create your first code chunk using `cmd+option+i`. In it, create two variables that are each numbers, then add them together.
+
+

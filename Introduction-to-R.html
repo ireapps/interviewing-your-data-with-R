@@ -392,6 +392,10 @@ write code, in what we call a <strong>code chunk</strong>:</p>
 <pre class="r"><code>x &lt;- &quot;Hello, World!&quot;
 print(x)</code></pre>
 <pre><code>## [1] &quot;Hello, World!&quot;</code></pre>
+<p>In notebook files, the results of the code in each code chunk will
+print below the chunk, allowing you to quickly see the results of your
+work. The utility of this will be apparent when we start asking
+questions of data.</p>
 <p>You create a code chunk by typing <code>cmd+option+i</code> and you
 write your <code>code</code> in between the first and last lines of the
 code chunk. All your comments, questions, thoughts, and notes are
@@ -423,7 +427,7 @@ print(x)</code></pre>
 <p>In the example above, “spaghetti” is a string of text, or characters.
 You can also store numbers in variables (which do not require double
 quotes):</p>
-<pre class="r"><code>y = 3</code></pre>
+<pre class="r"><code>y &lt;- 3</code></pre>
 <p>Naming variables: you can use letters, numbers, underscores and
 dots</p>
 <table style="width:100%;">
@@ -492,8 +496,8 @@ elements of the same data type, for example all strings or all numbers,
 and are created with the <code>c()</code>
 <strong>function</strong>:</li>
 </ul>
-<pre class="r"><code>x = c(&quot;spagetti sauce&quot;, &quot;noodles&quot;, &quot;parmesan&quot;)
-y = c(1,2,3)</code></pre>
+<pre class="r"><code>x &lt;- c(&quot;spagetti sauce&quot;, &quot;noodles&quot;, &quot;parmesan&quot;)
+y &lt;- c(1,2,3)</code></pre>
 <ul>
 <li><strong>function</strong>: these are the backbones of all analysis,
 in any program (from spreadsheets to database managers to programming
@@ -503,8 +507,8 @@ particular thing. The structure is:
 <code>sum()</code> function works in R the same way it works in other
 programs:</li>
 </ul>
-<pre class="r"><code>x = 1
-y = 2
+<pre class="r"><code>x &lt;- 1
+y &lt;- 2
 sum(x,y)</code></pre>
 <pre><code>## [1] 3</code></pre>
 <ul>

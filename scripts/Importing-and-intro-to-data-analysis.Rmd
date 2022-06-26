@@ -2,32 +2,22 @@
 title: "Importing and intro to data analysis"
 output: 
 html_notebook: default
-editor_options: 
-  markdown: 
-    wrap: sentence
 ---
 
-First off, load the tidyverse set of packages.
-Run the following code chunk by hitting the green play button in the upper-right corner.\
+First off, load the tidyverse set of packages. Run the following code chunk by hitting the green play button in the upper-right corner.
 Always load your packages at the top of your script.
 
 ```{r}
 library(tidyverse)
 ```
 
-Next up, load some data into your environment to play with.
-You'll use the function read_csv(), which is part of Tidyverse, to load a csv file that is in the data folder in your class directory.
-Note that we have to tell RStudio where the file is (in the data folder) and what it's called (mcd_opioid_deaths.csv) and all of that goes in double quotes:
+Next up, load some data into your environment to play with. You'll use the function read_csv(), which is part of Tidyverse, to load a csv file that is in the data folder in your class directory. Note that we have to tell RStudio where the file is (in the data folder) and what it's called (mcd_opioid_deaths.csv) and all of that goes in double quotes:
 
 ```{r}
 read_csv("data/mcd_opioid_deaths.csv")
 ```
 
-When you run this code, the read_csv function reads the file and prints it to the console below the code chunk.
-*Remember*: information is either printed to the console or stored in a variable.
-Note that the result is called a "tibble": kind of a funny word, but it's just a tidyverse table.
-Also note that the readout says "5032 x 6": that's 5,032 rows of data and 6 columns.
-The rows are paginated in the console below the code chunk so you see 10 at a time.
+When you run this code, the read_csv function reads the file and prints it to the console below the code chunk. **Remember**: information is either printed to the console or stored in a variable. Note that the result is called a "tibble": kind of a funny word, but it's just a tidyverse table. Also note that the readout says `5032 x 6`: that's 5,032 rows of data and 6 columns. The rows are paginated in the console below the code chunk so you see 10 at a time.
 
 Now read it in again, but this time store the data in a variable called "deaths":
 
@@ -35,24 +25,17 @@ Now read it in again, but this time store the data in a variable called "deaths"
 deaths <- read_csv("data/mcd_opioid_deaths.csv")
 ```
 
-In your environment (upper right), see how "deaths" appeared under a "Data" heading in our environment.
-Click on "deaths" and it will show you the table in a new tab (next to the name of this script).
+In your environment (upper right), see how "deaths" appeared under a "Data" heading in our environment. Click on "deaths" and it will show you the table in a new tab (next to the name of this script).
 
-A note about this dataset: it comes from the CDC WONDER Multiple Cause of Death data, and is a count of opioid-related deaths since 1999, by state, year and age group.
-Each row is one state, for one year, and one age group.
-You'll also see the word "unreliable" in the "notes" column whenever the death count is below 20.
+A note about this dataset: it comes from the CDC WONDER Multiple Cause of Death data, and is a count of opioid-related deaths since 1999, by state, year and age group. Each row is one state, for one year, and one age group. You'll also see the word "unreliable" in the "notes" column whenever the death count is below 20.
 
-Now that we've got our data loaded into a variable, we can refer to the data using that variable name.
-Next we'll use a pipe (`%>%`) to run the data through a function.
-The first function we'll try out is `arrange()`, which sorts data.
-Arrange your data by the "year" to see the earliest year in the data:
+Now that we've got our data loaded into a variable, we can refer to the data using that variable name. Next we'll use a pipe `%>%` to run the data through a function. The first function we'll try out is `arrange()`, which sorts data. Arrange your data by the "year" to see the earliest year in the data:
 
 ```{r}
 deaths %>% arrange(year)
 ```
 
-The earliest year is indeed 1999.
-To re-arrange and see the latest year on top, add the `desc()` function, nested in the `arrange()` function:
+The earliest year is indeed 1999. To re-arrange and see the latest year on top, add the `desc()` function, nested in the `arrange()` function:
 
 ```{r}
 deaths %>% arrange(desc(year))
@@ -60,56 +43,37 @@ deaths %>% arrange(desc(year))
 
 The dataset goes through 2020, so we have 22 years of data.
 
-The next function to try out is `filter()`, which allows you to only view certain rows of your data based on some criteria you set.
-So, for example, if you only want to see data for Colorado, you can filter for the "Colorado" in the state column:
+The next function to try out is `filter()`, which allows you to only view certain rows of your data based on some criteria you set. So, for example, if you only want to see data for Colorado, you can filter for the "Colorado" in the state column:
 
 ```{r}
 deaths %>% filter(state=="Colorado")
 ```
 
-OK let's unpack a few things about that code: 1.
-When analyzing data, your "queries" will often start this way: piping your dataset (in this case stored in the "deaths" variable) into a function or series of functions that transform your data.
-2.
-Inside the filter() function, we set the criteria for the rows we want returned: in this case, the value in `state` has to match exactly "Colorado".
-In R you must use two equals signs (==) for this.
-3.
-R is almost always case sensitive: when typing column names (state), matching exact values ("Colorado"), and even in function names.
+OK let's unpack a few things about that code: 1. When analyzing data, your "queries" will often start this way: piping your dataset (in this case stored in the "deaths" variable) into a function or series of functions that transform your data. 2. Inside the filter() function, we set the criteria for the rows we want returned: in this case, the value in `state` has to match exactly "Colorado". In R you must use two equals signs `==` for this. 3. R is almost always case sensitive: when typing column names (state), matching exact values ("Colorado"), and even in function names.
 
 *Your turn!* Filter for your state (or a different state):
 
-Now add another filter: look for records from your state in 2020.
-When adding criteria to a filter, you need to specify an operator: AND (&) or OR (\|).
-Do you want both criteria to be true (&) or do you want one or the other to be true (\|).
-In this case, we want both to be true:
+Now add another filter: look for records from your state in 2020. When adding criteria to a filter, you need to specify an operator: AND:`&` or OR:`|`. Do you want both criteria to be true (&) or do you want one or the other to be true (\|). In this case, we want both to be true:
 
 ```{r}
 deaths %>% filter(state=="Missouri" & year==2020)
 ```
 
-Note that 2020 is not in quotes, because the year column is a num column.
-Numbers never go in double quotes.
+Note that 2020 is not in quotes, because the year column is a num column. Numbers never go in double quotes.
 
-Next, string two functions together.
-You can pipe your dataset through two (or more!) functions.
-Keep in mind that this works linearly: the first function will do its work, and the output is piped into the next function.
+Next, string two functions together. You can pipe your dataset through two (or more!) functions. Keep in mind that this works linearly: the first function will do its work, and the output is piped into the next function.
 
-Find out which age group had the most deaths in your state in 2020.
-First pipe your dataset into the `filter()` function, and copy the filter code from above.
-Then pipe it into the `arrange(desc())` functions:
+Find out which age group had the most deaths in your state in 2020. First pipe your dataset into the `filter()` function, and copy the filter code from above. Then pipe it into the `arrange(desc())` functions:
 
 ```{r}
 deaths %>% filter(state=="Missouri" & year==2020) %>% arrange(desc(deaths))
 ```
 
-*Your turn!* Try looking at records in your state for a different year.
-Did the age group with the most deaths change?:
+*Your turn!* Try looking at records in your state for a different year. Did the age group with the most deaths change?:
 
 *Your turn!* Which state had the most deaths for the age group "25-34 years" in 2020?
 
-You've likely spotted a problem with our analysis so far.
-Looking at overall deaths isn't a fair way to compare states or compare age groups, since they have different population sizes.
-You have population information for each age group in each state each year, so you can use that to calculate a rate, which will be a fairer comparison.
-Death rates are often expressed as "per 100,000 people", and the math formula for that is: `deaths / population * 100000`
+You've likely spotted a problem with our analysis so far. Looking at overall deaths isn't a fair way to compare states or compare age groups, since they have different population sizes. You have population information for each age group in each state each year, so you can use that to calculate a rate, which will be a fairer comparison. Death rates are often expressed as "per 100,000 people", and the math formula for that is: `deaths / population * 100000`
 
 You'll create a new column called "death_rate" using the mutate() function:
 
@@ -117,9 +81,7 @@ You'll create a new column called "death_rate" using the mutate() function:
 deaths %>% mutate(death_rate = deaths/population*100000)
 ```
 
-Note that when you run this, the data with the new column prints to the console below the code chunk, but the underlying variable "deaths" hasn't changed (check your environment: it still says 5032 obs. of 6 variables).
-In order to save this new column, you need to overwrite the existing variable.
-add `deaths <-` to the beginning of your code above:
+Note that when you run this, the data with the new column prints to the console below the code chunk, but the underlying variable "deaths" hasn't changed (check your environment: it still says 5032 obs. of 6 variables). In order to save this new column, you need to overwrite the existing variable. add `deaths <-` to the beginning of your code above:
 
 ```{r}
 deaths <- deaths %>% mutate(death_rate = deaths/population*100000)
@@ -129,28 +91,21 @@ deaths <- deaths %>% mutate(death_rate = deaths/population*100000)
 
 *Your turn!* Filter for your state in 2020 and see which age group has the highest death rate:
 
-Now that we've practiced sorting and filtering, let's turn to the third pillar of data analysis: aggregating.
-In R we use a lot of the same summary functions as spreadsheets: `sum()`, `mean()`, `median()`.
-R uses "mean" instead of "average." These functions are part of base R, so they don't inherently work with tidyverse's piping scheme, so we use the tidyverse `summarise()` function to receive the output and work with the summary functions.
-To calculate the total number of opioid-related deaths in the data, use `summarise()` and `sum()` together, and we'll give the new aggregated data the name `total_deaths`:
+Now that we've practiced sorting and filtering, let's turn to the third pillar of data analysis: aggregating. In R we use a lot of the same summary functions as spreadsheets: `sum()`, `mean()`, `median()`. R uses "mean" instead of "average." These functions are part of base R, so they don't inherently work with tidyverse's piping scheme, so we use the tidyverse `summarise()` function to receive the output and work with the summary functions. To calculate the total number of opioid-related deaths in the data, use `summarise()` and `sum()` together, and we'll give the new aggregated data the name `total_deaths`:
 
 ```{r}
 deaths %>% summarise(total_deaths = sum(deaths))
 ```
 
-Just for practice, try switching out sum() with mean().
-This will tell us the average death count for each age group in each state in each year (which isn't necessarily meaningful):
+Just for practice, try switching out sum() with mean(). This will tell us the average death count for each age group in each state in each year (which isn't necessarily meaningful):
 
 ```{r}
 deaths %>% summarise(average_deaths = mean(deaths))
 ```
 
-*Your turn!* Narrow it down a bit.
-Calculate the average deaths for 25-34 year-olds, across all states and years (Hint: use filter() to isolate that one age group before piping into the summarise() function.)
+*Your turn!* Narrow it down a bit. Calculate the average deaths for 25-34 year-olds, across all states and years (Hint: use filter() to isolate that one age group before piping into the summarise() function.)
 
-Another common summary statistics we use in data analysis is the count of rows.
-The function for counting rows in R is `n()`, and doesn't require any arguments.
-We could use it here to count how many rows there are in total (which we already know):
+Another common summary statistics we use in data analysis is the count of rows. The function for counting rows in R is `n()`, and doesn't require any arguments. We could use it here to count how many rows there are in total (which we already know):
 
 ```{r}
 deaths %>% summarise(total_rows = n())
@@ -164,19 +119,13 @@ deaths %>% filter(state=="Colorado") %>% summarise(total_rows = n())
 
 Not super meaningful for this dataset, but an important function to know.
 
-Suppose you want to see how many deaths there are in each state, rather than just one?
-If you use spreadsheets much, hopefully what comes to mind is: pivot table!
-You want to group your data based on whatever value is in the state column, and then calculate total deaths for each group (state).
-The function for this is `group_by()`.
-Note: if you only use the `group_by()` function, R will create groups in the background of your data, but the output won't look any different:
+Suppose you want to see how many deaths there are in each state, rather than just one? If you use spreadsheets much, hopefully what comes to mind is: pivot table! You want to group your data based on whatever value is in the state column, and then calculate total deaths for each group (state). The function for this is `group_by()`. Note: if you only use the `group_by()` function, R will create groups in the background of your data, but the output won't look any different:
 
 ```{r}
 deaths %>% group_by(state)
 ```
 
-But notice that next to the box that says "A tibble: 5032 x 7" is a box that says "Groups: state [51]".
-It has done the grouping in the background, and there are 51 groups (50 states and D.C.).
-Pipe this into a `summarise()` function and it will act on the groups rather than the whole dataset.
+But notice that next to the box that says "A tibble: 5032 x 7" is a box that says "Groups: state [51]". It has done the grouping in the background, and there are 51 groups (50 states and D.C.). Pipe this into a `summarise()` function and it will act on the groups rather than the whole dataset.
 
 ```{r}
 deaths %>% group_by(state) %>% summarise(total_deaths = sum(deaths))
@@ -190,11 +139,7 @@ deaths %>% group_by(state) %>% summarise(total_deaths = sum(deaths)) %>% arrange
 
 *Your turn!* Find the age group with the most deaths:
 
-Here again is the problem where comparing raw deaths isn't that meaningful.
-To fairly compare states by comparing death rates, we need to add up all the deaths by state, the population by state, and then calculate a new death rate.
-You CANNOT use the existing death_rate column to find the death_rate by state.
-Start by doing this just for 2020: create a new table that contains the sum of all deaths and the sum of all population by state.
-Call it "state_deaths":
+Here again is the problem where comparing raw deaths isn't that meaningful. To fairly compare states by comparing death rates, we need to add up all the deaths by state, the population by state, and then calculate a new death rate. You CANNOT use the existing death_rate column to find the death_rate by state. Start by doing this just for 2020: create a new table that contains the sum of all deaths and the sum of all population by state. Call it "state_deaths":
 
 ```{r}
 state_deaths <- deaths %>% 
@@ -203,9 +148,7 @@ state_deaths <- deaths %>%
   summarise(total_deaths = sum(deaths), total_pop = sum(population))
 ```
 
-A note about the code: I've put each function on a new line.
-This is one way of making your code more readable.
-When you do this, make sure the pipe ( %\>% ) is at the end of the line, not the beginning.
+A note about the code: I've put each function on a new line. This is one way of making your code more readable. When you do this, make sure the pipe ( %\>% ) is at the end of the line, not the beginning.
 
 Now, calculate a death rate for this new dataset.
 
